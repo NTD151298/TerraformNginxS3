@@ -1,0 +1,38 @@
+---
+- name: Install Common
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    # Install Docker
+    - name: Install Container Engine
+      shell: |
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates curl gnupg lsb-release
+        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+        sudo apt-get install docker.io docker-compose -y
+        systemctl enable docker.service
+        systemctl start docker.service
+
+        cat <<EOF | sudo tee /etc/docker/daemon.json
+        {
+          "exec-opts": ["native.cgroupdriver=systemd"],
+          "log-driver": "json-file",
+          "log-opts": {
+            "max-size": "100m"
+          },
+          "storage-driver": "overlay2"
+        }
+        EOF
+        sudo systemctl enable docker
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+        sudo chmod 777 /var/run/docker.sock
+
+    # Run a image
+#    - name: Pull image form dockerhub repo
+#      shell: |
+#        docker pull duongtn1512/random_game:1cf3f88
+#        docker run -d --name exe1 -p 8080:80 duongtn1512/random_game:1cf3f88

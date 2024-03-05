@@ -1,0 +1,46 @@
+---
+- name: Stop Container, Install Nginx, and Configure Index.html
+  hosts: all
+  become: yes
+  tasks:
+    - name: Stop the running container
+      command: docker stop exe1
+      ignore_errors: yes
+      async: 10 # Give it some time to stop gracefully
+      poll: 0
+
+    - name: Update package repositories
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Configure Nginx default site to use S3-hosted index.html
+      template:
+        src: /home/duongtn1512/Terraform-lap3/data/nginx-site-config.conf
+        dest: /etc/nginx/sites-available/default
+      notify:
+        - Reload Nginx
+
+    - name: Enable Nginx default site
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      notify:
+        - Restart Nginx
+
+    - name: Ensure Nginx is started and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded

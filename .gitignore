@@ -1,0 +1,28 @@
+# All video files
+*.mp4
+
+# All pic files
+*.PNG
+
+# All pdf files
+*.pdf
+
+# All world files
+*.doc
+
+# All exec files
+*.xlsx
+*.csv
+
+# All running files
+*.exe
+
+# Exclude specific files
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+.terraform/
+
+# Github login
+Linux/git-token.txt
+
