@@ -4,4 +4,4 @@ Using terraform + ansible to create resource on AWS and install nginx config in 
 # To visualize project work flow  
 1. Download the file diagram.drawio to ur computer
 2. Open draw.io on web browser
-3. Chose existing diagram and point to .drawio u just downloaded
+3. Chose existing diagram and point to diagram.drawio u just downloaded
