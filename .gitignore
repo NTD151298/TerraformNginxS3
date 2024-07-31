@@ -2,7 +2,7 @@
 *.mp4
 
 # All pic files
-*.PNG
+#*.PNG
 
 # All pdf files
 *.pdf
